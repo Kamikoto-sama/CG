@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTKApp", "OpenTKApp\OpenTKApp.csproj", "{BE33C3B4-9300-4569-95CF-3DC41153D607}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{3E1EC0DC-3B2F-4C7E-BF21-B45CCD8A112E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGLApp", "SharpGLApp\SharpGLApp.csproj", "{748828DD-6B1A-479D-816F-B3924076722A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE33C3B4-9300-4569-95CF-3DC41153D607}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE33C3B4-9300-4569-95CF-3DC41153D607}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE33C3B4-9300-4569-95CF-3DC41153D607}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE33C3B4-9300-4569-95CF-3DC41153D607}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E1EC0DC-3B2F-4C7E-BF21-B45CCD8A112E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E1EC0DC-3B2F-4C7E-BF21-B45CCD8A112E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E1EC0DC-3B2F-4C7E-BF21-B45CCD8A112E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E1EC0DC-3B2F-4C7E-BF21-B45CCD8A112E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{748828DD-6B1A-479D-816F-B3924076722A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{748828DD-6B1A-479D-816F-B3924076722A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{748828DD-6B1A-479D-816F-B3924076722A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{748828DD-6B1A-479D-816F-B3924076722A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

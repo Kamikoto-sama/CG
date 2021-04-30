@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net5.0-windows</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
+	    <HintPath>..\..\openTK\OpenTK.dll</HintPath>
+	  </Reference>
+	  <Reference Include="OpenTK.Compatibility, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
+	    <HintPath>..\..\openTK\OpenTK.Compatibility.dll</HintPath>
+	  </Reference>
+	  <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
+	    <HintPath>..\..\openTK\OpenTK.GLControl.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+</Project>
