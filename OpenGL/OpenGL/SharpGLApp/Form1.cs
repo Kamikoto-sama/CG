@@ -13,12 +13,12 @@ namespace SharpGL
             InitializeComponent();
         }
 
-        private readonly Vector3 defaultScenePosition = new(10, 2, -26);
+        private readonly Vector3 defaultScenePosition = new(4, 2, -26);
         private const float MoveStepSize = 0.5f;
         private Vector3 scenePosition;
 
         private bool rotationMode;
-        private readonly Vector3 defaultSceneRotation = new(20, -10, 0);
+        private readonly Vector3 defaultSceneRotation = new(10, 0, 0);
         private const float RotationAngle = 10;
         private Vector3 sceneRotation;
 

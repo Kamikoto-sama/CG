@@ -11,6 +11,7 @@ namespace SharpGL
     public static class OpenGlExtensions
     {
         private static Color currentColor = System.Drawing.Color.Black;
+        private static Color edgesColor = System.Drawing.Color.Black;
         private static Stack<Vector3> translations = new();
         private static Stack<Vector3> rotations = new();
 
@@ -81,47 +82,47 @@ namespace SharpGL
             gl.End();
         }
 
-        public static void DrawParallelepiped(this OpenGL gl, Vector3 edges)
+        public static void DrawParallelepiped(this OpenGL gl, Vector3 edges, bool withEdges = false)
         {
             // грани
-            gl.Begin(BeginMode.Quads);
+            gl.Draw(BeginMode.Quads, () =>
+            {
+                /*задняя*/
+                gl.Vertex(0, 0, 0);
+                gl.Vertex(edges.X, 0, 0);
+                gl.Vertex(edges.X, edges.Y, 0);
+                gl.Vertex(0, edges.Y, 0);
 
-            /*задняя*/
-            gl.Vertex(0, 0, 0);
-            gl.Vertex(edges.X, 0, 0);
-            gl.Vertex(edges.X, edges.Y, 0);
-            gl.Vertex(0, edges.Y, 0);
+                /*левая*/
+                gl.Vertex(0, 0, 0);
+                gl.Vertex(0, 0, edges.Z);
+                gl.Vertex(0, edges.Y, edges.Z);
+                gl.Vertex(0, edges.Y, 0);
 
-            /*левая*/
-            gl.Vertex(0, 0, 0);
-            gl.Vertex(0, 0, edges.Z);
-            gl.Vertex(0, edges.Y, edges.Z);
-            gl.Vertex(0, edges.Y, 0);
+                /*нижняя*/
+                gl.Vertex(0, 0, 0);
+                gl.Vertex(0, 0, edges.Z);
+                gl.Vertex(edges.X, 0, edges.Z);
+                gl.Vertex(edges.X, 0, 0);
 
-            /*нижняя*/
-            gl.Vertex(0, 0, 0);
-            gl.Vertex(0, 0, edges.Z);
-            gl.Vertex(0, 0, edges.Z);
-            gl.Vertex(edges.X, 0, 0);
+                /*верхняя*/
+                gl.Vertex(0, edges.Y, 0);
+                gl.Vertex(0, edges.Y, edges.Z);
+                gl.Vertex(edges.X, edges.Y, edges.Z);
+                gl.Vertex(edges.X, edges.Y, 0);
 
-            /*верхняя*/
-            gl.Vertex(0, edges.Y, 0);
-            gl.Vertex(0, edges.Y, edges.Z);
-            gl.Vertex(edges.X, edges.Y, edges.Z);
-            gl.Vertex(edges.X, edges.Y, 0);
+                /*передняя*/
+                gl.Vertex(0, 0, edges.Z);
+                gl.Vertex(edges.X, 0, edges.Z);
+                gl.Vertex(edges.X, edges.Y, edges.Z);
+                gl.Vertex(0, edges.Y, edges.Z);
 
-            /*передняя*/
-            gl.Vertex(0, 0, edges.Z);
-            gl.Vertex(edges.X, 0, edges.Z);
-            gl.Vertex(edges.X, edges.Y, edges.Z);
-            gl.Vertex(0, edges.Y, edges.Z);
-
-            /*правая*/
-            gl.Vertex(edges.X, 0, 0);
-            gl.Vertex(edges.X, 0, edges.Z);
-            gl.Vertex(edges.X, edges.Y, edges.Z);
-            gl.Vertex(edges.X, edges.Y, 0);
-            gl.End();
+                /*правая*/
+                gl.Vertex(edges.X, 0, 0);
+                gl.Vertex(edges.X, 0, edges.Z);
+                gl.Vertex(edges.X, edges.Y, edges.Z);
+                gl.Vertex(edges.X, edges.Y, 0);
+            }, !withEdges);
         }
 
         public static void DrawCylinder(
@@ -130,7 +131,7 @@ namespace SharpGL
             float height,
             bool covered = false,
             int partsCount = 50,
-            bool edgeless = false)
+            bool withEdges = false)
         {
             var center = PointF.Empty;
             var contourPoints = GetRegularPolygonPoints(partsCount, center, radius).ToArray();
@@ -145,7 +146,7 @@ namespace SharpGL
                     gl.Vertex(point2.X, point2.Y, height);
                     gl.Vertex(point2.X, point2.Y, 0);
                 }
-            }, edgeless);
+            }, !withEdges);
 
             if (!covered)
                 return;
@@ -196,7 +197,13 @@ namespace SharpGL
                 });
         }
 
-        public static void Repeat(this OpenGL gl, Action action, int count, Vector3 posDiff, Vector3 rotationDiff)
+        public static void Repeat(
+            this OpenGL gl,
+            Action action,
+            int count,
+            Vector3 posDiff,
+            Vector3 rotationDiff,
+            bool saveTransform = false)
         {
             for (var i = 0; i < count; i++)
             {
@@ -205,6 +212,9 @@ namespace SharpGL
                 gl.Rotate(rotationDiff);
             }
 
+            if (saveTransform)
+                return;
+
             for (var i = 0; i < count; i++)
             {
                 gl.Rotate(-rotationDiff);
@@ -212,10 +222,21 @@ namespace SharpGL
             }
         }
 
-        public static void SetColor(this OpenGL gl, Color color)
+        public static void SetColor(this OpenGL gl, Color color, bool forEdges = false)
         {
+            if (forEdges)
+            {
+                edgesColor = color;
+                return;
+            }
+
             currentColor = color;
             Color(gl, color);
+        }
+
+        public static void SetColor(this OpenGL gl, int r, int g, int b, bool forEdges = false)
+        {
+            gl.SetColor(System.Drawing.Color.FromArgb(1, r, g, b), forEdges);
         }
 
         public static void Draw(this OpenGL gl, BeginMode beginMode, Action vertex, bool edgeless = false)
@@ -227,7 +248,7 @@ namespace SharpGL
             if (edgeless)
                 return;
 
-            Color(gl, System.Drawing.Color.Black);
+            Color(gl, edgesColor);
             gl.Begin(BeginMode.LineLoop);
             vertex();
             gl.End();
@@ -302,6 +323,7 @@ namespace SharpGL
                     gl.Vertex(outerPoint2.X, outerPoint2.Y);
                 }, true);
             }
+
             gl.Color(currentColor);
         }
     }
