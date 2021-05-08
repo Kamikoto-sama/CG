@@ -12,8 +12,8 @@ namespace SharpGL
     {
         private static Color currentColor = System.Drawing.Color.Black;
         private static Color edgesColor = System.Drawing.Color.Black;
-        private static Stack<Vector3> translations = new();
-        private static Stack<Vector3> rotations = new();
+        private static Stack<Vector3> translations = new Stack<Vector3>();
+        private static Stack<Vector3> rotations = new Stack<Vector3>();
 
         private static (float, float, float) ConvertColor(Color color)
         {
@@ -294,12 +294,11 @@ namespace SharpGL
             this OpenGL gl,
             float innerRadius,
             float outerRadius,
-            int partsCount = 10,
-            bool edgeless = false)
+            int partsCount = 10)
         {
             var outerPoints = GetRegularPolygonPoints(partsCount, PointF.Empty, outerRadius);
             var innerPoints = GetRegularPolygonPoints(partsCount, PointF.Empty, innerRadius);
-            var points = innerPoints.Zip(outerPoints).Pairs().ToArray();
+            var points = innerPoints.Zip(outerPoints, (p1, p2) => (p1, p2)).Pairs().ToArray();
 
             foreach (var ((innerPoint1, innerPoint2), (outerPoint1, outerPoint2)) in points)
             {
