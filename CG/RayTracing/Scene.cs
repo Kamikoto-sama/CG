@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
+using RayTracing.Light;
 using RayTracing.SceneObjects;
 
 namespace RayTracing
@@ -13,11 +14,13 @@ namespace RayTracing
         public Vector3 CameraPosition { get; set; }
 
         public List<ISceneObject> Objects { get; }
+        public List<LightSource> LightSources { get; }
 
         public Scene(Canvas canvas)
         {
             Canvas = canvas;
             Objects = new List<ISceneObject>();
+            LightSources = new List<LightSource>();
         }
 
         public Vector3 CanvasToViewport(PointF p2d)

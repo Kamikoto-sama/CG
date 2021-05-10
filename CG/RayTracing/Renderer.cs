@@ -1,5 +1,7 @@
 ﻿using System.Drawing;
+using System.Linq;
 using System.Numerics;
+using RayTracing.Light;
 using RayTracing.SceneObjects;
 
 namespace RayTracing
@@ -28,7 +30,7 @@ namespace RayTracing
         private Color TraceRay(Vector3 origin, Vector3 direction, float minDistance, float maxDistance)
         {
             var closestIntersection = float.MaxValue;
-            ISceneObject closestSphere = null;
+            ISceneObject closestObject = null;
 
             foreach (var sceneObject in Scene.Objects)
             {
@@ -37,20 +39,74 @@ namespace RayTracing
                 if (intersects == null)
                     continue;
 
-                if (intersects[0] < closestIntersection && minDistance < intersects[0] && intersects[0] < maxDistance)
+                var min = intersects.Min();
+                if (min < closestIntersection && min > minDistance && min < maxDistance)
                 {
-                    closestIntersection = intersects[0];
-                    closestSphere = sceneObject;
-                }
-
-                if (intersects[1] < closestIntersection && minDistance < intersects[1] && intersects[1] < maxDistance)
-                {
-                    closestIntersection = intersects[1];
-                    closestSphere = sceneObject;
+                    closestIntersection = min;
+                    closestObject = sceneObject;
                 }
             }
 
-            return closestSphere?.Color ?? Scene.Canvas.BackgroundColor;
+            if (closestObject == null)
+                return Scene.Canvas.BackgroundColor;
+
+            // var point = Add(origin, Multiply(closest_t, direction));
+            // normal = Multiply(1.0 / Length(normal), normal);
+
+            var intersectionPoint = origin + closestIntersection * direction;
+            var normal = closestObject.GetNormal(intersectionPoint);
+            var intensity = ComputeLighting(intersectionPoint, normal);
+
+            return closestObject.Color.WithBrightness(intensity);
+
+            // return Multiply(ComputeLighting(point, normal), closest_sphere.color);
+        }
+
+        private float ComputeLighting(Vector3 intersectionPoint, Vector3 normal)
+        {
+            var resultIntensity = 0f;
+            var normalLength = normal.Length();
+
+            foreach (var light in Scene.LightSources)
+            {
+                // if (light.ltype == Light.AMBIENT) {
+                //     resultIntensity += light.intensity;
+                // } else {
+                //     var vec_l;
+                //     if (light.ltype == Light.POINT) {
+                //         vec_l = Subtract(light.position, point);
+                //     } else {  // Light.DIRECTIONAL
+                //         vec_l = light.position;
+                //     }
+                //
+                //     var n_dot_l = DotProduct(normal, vec_l);
+                //     if (n_dot_l > 0) {
+                //         resultIntensity += light.intensity * n_dot_l / (normalLength * Length(vec_l));
+                //     }
+                // }
+                Vector3 lightDirection;
+
+                switch (light.Type)
+                {
+                    case LightSourceType.Ambient:
+                        resultIntensity += light.Intensity;
+                        continue;
+                    case LightSourceType.Point:
+                        lightDirection = light.Position - intersectionPoint;
+                        break;
+                    case LightSourceType.Directional:
+                        lightDirection = light.Direction;
+                        break;
+                    default:
+                        continue;
+                }
+
+                var incidenceAngle = Vector3.Dot(normal, lightDirection);
+                if (incidenceAngle > 0)
+                    resultIntensity += light.Intensity * incidenceAngle / (normalLength * lightDirection.Length());
+            }
+
+            return resultIntensity;
         }
     }
 }

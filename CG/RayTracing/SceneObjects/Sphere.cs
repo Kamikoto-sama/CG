@@ -34,5 +34,7 @@ namespace RayTracing.SceneObjects
 
             return new[] {t1, t2};
         }
+
+        public Vector3 GetNormal(Vector3 intersectionPoint) => Vector3.Normalize(intersectionPoint - Center);
     }
 }

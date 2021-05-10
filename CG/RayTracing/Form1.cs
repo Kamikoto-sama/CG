@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
-using System.Threading;
 using System.Windows.Forms;
+using RayTracing.Light;
 using RayTracing.SceneObjects;
 
 namespace RayTracing
@@ -16,7 +15,7 @@ namespace RayTracing
         {
             InitializeComponent();
 
-            var size = new Size(300, 300);
+            var size = new Size(600, 600);
             pictureBox.Size = size + new Size(1, 1);
 
             var canvas = new Canvas(size);
@@ -35,7 +34,15 @@ namespace RayTracing
             {
                 new Sphere(new Vector3(0, -1, 3), 1, Color.Red),
                 new Sphere(new Vector3(2, 0, 4), 1, Color.Green),
-                new Sphere(new Vector3(-2, 0, 4), 1, Color.Blue)
+                new Sphere(new Vector3(-2, 0, 4), 1, Color.Blue),
+                new Sphere(new Vector3(0, -5001, 0), 5000, Color.Yellow),
+            });
+
+            scene.LightSources.AddRange(new[]
+            {
+                new LightSource(LightSourceType.Ambient, .2f),
+                new LightSource(LightSourceType.Point, .6f) {Position = new Vector3(2, 1, 0)},
+                new LightSource(LightSourceType.Directional, .2f) {Direction = new Vector3(1, 4, 4)},
             });
         }
 

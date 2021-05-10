@@ -14,5 +14,14 @@ namespace RayTracing
 
             bitmap.SetPixel(x, y, color);
         }
+
+        public static Color WithBrightness(this Color color, float brightness)
+        {
+            var r = (int) (color.R * brightness);
+            var g = (int) (color.G * brightness);
+            var b = (int) (color.B * brightness);
+
+            return Color.FromArgb(255, r, g, b);
+        }
     }
 }
