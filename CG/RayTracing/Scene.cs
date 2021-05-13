@@ -8,10 +8,12 @@ namespace RayTracing
 {
     public class Scene
     {
-        public Size ViewPortSize { get; set; } = new Size(1, 1);
+        public Size ViewPortSize { get; set; }
         public Canvas Canvas { get; }
-        public float ProjectionPlaneZ { get; set; } = 1;
+        public float ProjectionPlaneZ { get; set; }
+
         public Vector3 CameraPosition { get; set; }
+        public Vector3 CameraRotation { get; set; }
 
         public List<ISceneObject> Objects { get; }
         public List<LightSource> LightSources { get; }
@@ -19,6 +21,8 @@ namespace RayTracing
         public Scene(Canvas canvas)
         {
             Canvas = canvas;
+            ViewPortSize = new Size(canvas.Width / canvas.Height, canvas.Height / canvas.Width);
+            ProjectionPlaneZ = 1;
             Objects = new List<ISceneObject>();
             LightSources = new List<LightSource>();
         }

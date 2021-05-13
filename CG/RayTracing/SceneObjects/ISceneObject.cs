@@ -5,9 +5,11 @@ namespace RayTracing.SceneObjects
 {
     public interface ISceneObject
     {
-        public float[] IntersectRay(Vector3 origin, Vector3 direction);
         public Color Color { get; }
+        public int Specular { get; }
+        public float Reflective { get; }
 
+        public float[] IntersectRay(Vector3 origin, Vector3 direction);
         public Vector3 GetNormal(Vector3 intersectionPoint);
     }
 }

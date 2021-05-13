@@ -15,7 +15,7 @@ namespace RayTracing
         {
             Width = size.Width;
             Height = size.Height;
-            BackgroundColor = Color.Black;
+            BackgroundColor = Color.SkyBlue;
         }
 
         public IEnumerator<Point> GetEnumerator()
