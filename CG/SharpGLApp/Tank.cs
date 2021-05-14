@@ -82,6 +82,13 @@ namespace SharpGL.TankParts
         private const float TrackUnitConnectorWidth = TrackUnitWidth / 9;
         private const float TrackUnitsGap = TrackUnitConnectorLength * .5f;
 
+        // задние коробки
+        private const float BackBoxWidth = 3f;
+        private const float BackBoxHalfHeight = 1.5f;
+        private const float BackBoxLength = 3;
+        private const float BackBoxTopHeight = 1f;
+        private const float BackBoxTopLength = BackBoxLength * .6f;
+
         public static void Draw(OpenGL gl)
         {
             // Основа
@@ -218,6 +225,41 @@ namespace SharpGL.TankParts
                 gl.Vertex(-(BaseLength - CabinetSlopeLength), CabinetHeight, -CabinetTopWidth / 2);
                 gl.Vertex(-CabinetSlopeLength, CabinetHeight, -CabinetTopWidth / 2);
             });
+
+            // задние коробки
+            gl.DoTranslate(-(BaseLength + 0.8f), 0, CabinetBottomWidth / 2, true);
+
+            gl.Repeat(() =>
+            {
+                gl.DrawParallelepiped(new Vector3(BackBoxLength, BackBoxHalfHeight, -BackBoxWidth), true);
+
+                gl.DoTranslate(Vector3.UnitY * BackBoxHalfHeight, true);
+                gl.DrawParallelepiped(new Vector3(BackBoxTopLength, BackBoxTopHeight, -BackBoxWidth), true);
+
+                gl.DoTranslate(Vector3.UnitX * BackBoxTopLength, true);
+
+                gl.Repeat(() =>
+                {
+                    gl.Draw(BeginMode.Polygon, () =>
+                    {
+                        gl.Vertex(Vector3.Zero);
+                        gl.Vertex(Vector3.UnitY * BackBoxTopHeight);
+                        gl.Vertex(Vector3.UnitX * (BackBoxLength - BackBoxTopLength));
+                    });
+                }, 2, Vector3.UnitZ * -BackBoxWidth, Vector3.Zero);
+
+                gl.Draw(BeginMode.Polygon, () =>
+                {
+                    gl.Vertex(Vector3.UnitY * BackBoxTopHeight);
+                    gl.Vertex(0, BackBoxTopHeight, -BackBoxWidth);
+                    gl.Vertex(BackBoxLength - BackBoxTopLength, 0, -BackBoxWidth);
+                    gl.Vertex(BackBoxLength - BackBoxTopLength, 0, 0);
+                });
+
+                gl.UndoTranslation(2);
+            }, 2, Vector3.UnitZ * -(CabinetBottomWidth - BackBoxWidth), Vector3.Zero);
+
+            gl.UndoTranslation();
         }
 
         private static void DrawTurret(OpenGL gl)
@@ -289,6 +331,28 @@ namespace SharpGL.TankParts
                 gl.Vertex(TurretLength, TurretHeight, -TurretTopFrontWidth / 2);
             }, true);
 
+            // люк
+            gl.DoTranslate(-TurretLength / 2, TurretHeight, -TurretTopFrontWidth / 2, true);
+
+            const float hatchWidth = TurretTopFrontWidth;
+            const float hatchLength = 2.5f;
+            const float hatchThickness = .1f;
+            const float hatchFastenersWidth = .3f;
+            const float hatchFastenersLength = .5f;
+
+            gl.DrawParallelepiped(new Vector3(hatchLength, hatchThickness, hatchWidth), true);
+
+            // крепления
+            gl.DoTranslate(hatchLength, 0, hatchFastenersWidth, true);
+            gl.Repeat(() =>
+            {
+                gl.DrawParallelepiped(
+                    new Vector3(hatchFastenersLength, hatchThickness, hatchFastenersWidth),
+                    true);
+            }, 2, Vector3.UnitZ * (hatchWidth - hatchFastenersWidth * 3), Vector3.Zero);
+
+            gl.UndoTranslation(2);
+
             //основа ствола
             gl.DoTranslate(Vector3.UnitX * TurretLength, true);
 
@@ -353,7 +417,7 @@ namespace SharpGL.TankParts
                 // гусеницы
                 DrawTracks(gl);
                 gl.UndoTranslation(2);
-            }, 2, Vector3.UnitZ * - (zDiff + WheelPartWidth), Vector3.Zero);
+            }, 2, Vector3.UnitZ * -(zDiff + WheelPartWidth), Vector3.Zero);
         }
 
         private static void DrawTracks(OpenGL gl)

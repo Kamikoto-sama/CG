@@ -13,12 +13,12 @@ namespace SharpGL
             InitializeComponent();
         }
 
-        private readonly Vector3 defaultScenePosition = new Vector3(4, 2, -26);
+        private readonly Vector3 defaultScenePosition = new Vector3(-2, -2, -32);
         private const float MoveStepSize = 0.5f;
         private Vector3 scenePosition;
 
         private bool rotationMode;
-        private readonly Vector3 defaultSceneRotation = new Vector3(10, 0, 0);
+        private readonly Vector3 defaultSceneRotation = new Vector3(20, -30, 0);
         private const float RotationAngle = 10;
         private Vector3 sceneRotation;
 
@@ -47,10 +47,11 @@ namespace SharpGL
 
             AdjustScene(gl);
 
-            gl.Translate(-13, 0, -5);
+            gl.DrawAxis(40);
+
+            gl.Translate(-12, 0, -5);
 
             Tank.Draw(gl);
-            gl.DrawAxis(40);
 
             DrawUi(gl);
 
