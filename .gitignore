@@ -22,3 +22,11 @@ OpenGL/OpenGL/OpenTKApp/bin/
 OpenGL/OpenGL/OpenTKApp/obj/
 
 CG/.idea/
+
+CG/RayTracing/obj/
+
+CG/RayTracing/bin/
+
+CG/SharpGLApp/bin/
+
+CG/SharpGLApp/obj/
