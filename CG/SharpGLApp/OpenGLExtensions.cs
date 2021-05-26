@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
-using OpenTKApp;
 using SharpGL.Enumerations;
 
 namespace SharpGL
@@ -82,7 +81,11 @@ namespace SharpGL
             gl.End();
         }
 
-        public static void DrawParallelepiped(this OpenGL gl, Vector3 edges, bool withEdges = false)
+        public static void DrawParallelepiped(
+            this OpenGL gl,
+            Vector3 edges,
+            bool withEdges = false,
+            bool textured = false)
         {
             // грани
             gl.Draw(BeginMode.Quads, () =>
@@ -105,11 +108,23 @@ namespace SharpGL
                 gl.Vertex(edges.X, 0, edges.Z);
                 gl.Vertex(edges.X, 0, 0);
 
+                if (textured)
+                    gl.Color(System.Drawing.Color.White);
                 /*верхняя*/
+                if (textured)
+                    gl.TexCoord(0, 0);
                 gl.Vertex(0, edges.Y, 0);
+                if (textured)
+                    gl.TexCoord(1, 0);
                 gl.Vertex(0, edges.Y, edges.Z);
+                if (textured)
+                    gl.TexCoord(1, 1);
                 gl.Vertex(edges.X, edges.Y, edges.Z);
+                if (textured)
+                    gl.TexCoord(0, 1);
                 gl.Vertex(edges.X, edges.Y, 0);
+                if (textured)
+                    gl.Color(currentColor);
 
                 /*передняя*/
                 gl.Vertex(0, 0, edges.Z);

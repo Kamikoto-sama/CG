@@ -2,10 +2,11 @@
 using System.Drawing;
 using System.Numerics;
 using SharpGL.Enumerations;
+using SharpGL.SceneGraph.Assets;
 
-namespace SharpGL.TankParts
+namespace SharpGL
 {
-    public static class Tank
+    public class Tank
     {
         private const int Roundness = 25;
 
@@ -89,7 +90,7 @@ namespace SharpGL.TankParts
         private const float BackBoxTopHeight = 1f;
         private const float BackBoxTopLength = BackBoxLength * .6f;
 
-        public static void Draw(OpenGL gl)
+        public static void Draw(OpenGL gl, Texture hatchTexture)
         {
             // Основа
             DrawBase(gl);
@@ -98,7 +99,7 @@ namespace SharpGL.TankParts
             DrawCabinet(gl);
 
             // башня
-            DrawTurret(gl);
+            DrawTurret(gl, hatchTexture);
 
             // ходовая часть
             DrawRunningGear(gl);
@@ -262,7 +263,7 @@ namespace SharpGL.TankParts
             gl.UndoTranslation();
         }
 
-        private static void DrawTurret(OpenGL gl)
+        private static void DrawTurret(OpenGL gl, Texture hatchTexture)
         {
             gl.DoTranslate(-CabinetSlopeLength - 6, CabinetHeight, 0, true);
 
@@ -334,22 +335,7 @@ namespace SharpGL.TankParts
             // люк
             gl.DoTranslate(-TurretLength / 2, TurretHeight, -TurretTopFrontWidth / 2, true);
 
-            const float hatchWidth = TurretTopFrontWidth;
-            const float hatchLength = 2.5f;
-            const float hatchThickness = .1f;
-            const float hatchFastenersWidth = .3f;
-            const float hatchFastenersLength = .5f;
-
-            gl.DrawParallelepiped(new Vector3(hatchLength, hatchThickness, hatchWidth), true);
-
-            // крепления
-            gl.DoTranslate(hatchLength, 0, hatchFastenersWidth, true);
-            gl.Repeat(() =>
-            {
-                gl.DrawParallelepiped(
-                    new Vector3(hatchFastenersLength, hatchThickness, hatchFastenersWidth),
-                    true);
-            }, 2, Vector3.UnitZ * (hatchWidth - hatchFastenersWidth * 3), Vector3.Zero);
+            DrawHatch(gl, hatchTexture);
 
             gl.UndoTranslation(2);
 
@@ -399,6 +385,28 @@ namespace SharpGL.TankParts
             gl.DrawCylinder(BarrelRadius, BarrelLength, partsCount: Roundness);
 
             gl.UndoRotation(2);
+        }
+
+        private static void DrawHatch(OpenGL gl, Texture texture)
+        {
+            const float hatchWidth = TurretTopFrontWidth;
+            const float hatchLength = 2.5f;
+            const float hatchThickness = .1f;
+            const float hatchFastenersWidth = .3f;
+            const float hatchFastenersLength = .5f;
+
+            texture.Bind(gl);
+
+            gl.DrawParallelepiped(new Vector3(hatchLength, hatchThickness, hatchWidth), true, true);
+
+            // крепления
+            gl.DoTranslate(hatchLength, 0, hatchFastenersWidth, true);
+            gl.Repeat(() =>
+            {
+                gl.DrawParallelepiped(
+                    new Vector3(hatchFastenersLength, hatchThickness, hatchFastenersWidth),
+                    true);
+            }, 2, Vector3.UnitZ * (hatchWidth - hatchFastenersWidth * 3), Vector3.Zero);
         }
 
         private static void DrawRunningGear(OpenGL gl)

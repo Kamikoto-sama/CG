@@ -2,7 +2,9 @@
 using System.Drawing;
 using System.Numerics;
 using System.Windows.Forms;
-using SharpGL.TankParts;
+using SharpGL.Enumerations;
+using SharpGL;
+using SharpGL.SceneGraph.Assets;
 
 namespace SharpGL
 {
@@ -17,10 +19,12 @@ namespace SharpGL
         private const float MoveStepSize = 0.5f;
         private Vector3 scenePosition;
 
-        private bool rotationMode;
+        private bool rotationMode = true;
         private readonly Vector3 defaultSceneRotation = new Vector3(20, -30, 0);
         private const float RotationAngle = 10;
         private Vector3 sceneRotation;
+
+        private readonly Texture hatchTexture = new Texture();
 
         public static string DebugText = "";
 
@@ -28,6 +32,9 @@ namespace SharpGL
         {
             var gl = openGLControl1.OpenGL;
             gl.ClearColor(.53f, .81f, .92f, 1);
+
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
+            hatchTexture.Create(gl, @"texture.png");
 
             SetDefaults();
         }
@@ -51,7 +58,7 @@ namespace SharpGL
 
             gl.Translate(-12, 0, -5);
 
-            Tank.Draw(gl);
+            Tank.Draw(gl, hatchTexture);
 
             DrawUi(gl);
 

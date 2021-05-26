@@ -32,9 +32,9 @@
             this.openGLControl1 = new SharpGL.OpenGLControl();
             ((System.ComponentModel.ISupportInitialize) (this.openGLControl1)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // openGLControl1
-            // 
+            //
             this.openGLControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.openGLControl1.DrawFPS = false;
             this.openGLControl1.FrameRate = 25;
@@ -48,9 +48,9 @@
             this.openGLControl1.OpenGLInitialized += new System.EventHandler(this.openGLControl1_OpenGLInitialized);
             this.openGLControl1.OpenGLDraw += new SharpGL.RenderEventHandler(this.openGLControl1_OpenGLDraw);
             this.openGLControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.openGLControl1_KeyDown);
-            // 
+            //
             // Form1
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 561);
@@ -64,8 +64,6 @@
         }
 
         private SharpGL.OpenGLControl openGLControl1;
-
-        private SharpGL.OpenGLControl GlControl;
 
         #endregion
     }

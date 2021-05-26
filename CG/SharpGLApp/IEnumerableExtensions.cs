@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace OpenTKApp
+namespace SharpGL
 {
     public static class EnumerableExtensions
     {
