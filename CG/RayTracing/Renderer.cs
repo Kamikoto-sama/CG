@@ -23,25 +23,25 @@ namespace RayTracing
             var canvas = Scene.Canvas;
             var resultPixels = new ConcurrentBag<Pixel>();
 
-            var tasks = canvas.Select(pixel => Task.Run(() =>
-            {
-                var direction = Scene.CanvasToViewport(pixel);
-                direction = direction.Rotate(Scene.CameraRotation);
-
-                var color = TraceRay(Scene.CameraPosition, direction, 1, float.MaxValue, TracingDepth);
-
-                resultPixels.Add(new Pixel(pixel, color));
-            })).ToArray();
-
-            Task.WaitAll(tasks);
-
-            // foreach (var pixel in canvas)
+            // var tasks = canvas.Select(pixel => Task.Run(() =>
             // {
             //     var direction = Scene.CanvasToViewport(pixel);
             //     direction = direction.Rotate(Scene.CameraRotation);
+            //
             //     var color = TraceRay(Scene.CameraPosition, direction, 1, float.MaxValue, TracingDepth);
+            //
             //     resultPixels.Add(new Pixel(pixel, color));
-            // }
+            // })).ToArray();
+            //
+            // Task.WaitAll(tasks);
+
+            foreach (var pixel in canvas)
+            {
+                var direction = Scene.CanvasToViewport(pixel);
+                direction = direction.Rotate(Scene.CameraRotation);
+                var color = TraceRay(Scene.CameraPosition, direction, 1, float.MaxValue, TracingDepth);
+                resultPixels.Add(new Pixel(pixel, color));
+            }
 
             var resultBitmap = new Bitmap(canvas.Width, canvas.Height);
             foreach (var pixel in resultPixels)
@@ -68,7 +68,8 @@ namespace RayTracing
 
             var originDirection = -direction;
             var lighting = ComputeLighting(intersectionPoint, normal, originDirection, closestObject.Specular);
-            var currentColor = closestObject.Color.WithBrightness(lighting);
+            var objColor = closestObject.GetColor(intersectionPoint);
+            var currentColor = objColor.WithBrightness(lighting);
 
             if (closestObject.Reflective <= 0 || tracingDepth <= 0)
                 return currentColor;

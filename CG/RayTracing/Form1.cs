@@ -54,23 +54,24 @@ namespace RayTracing
 
         private void ConfigureScene(Scene scene)
         {
+            var mat = new Material(-1, .1f, .5f, Color.Black, Color.White);
+
             scene.Objects.AddRange(new[]
             {
-                new Sphere(Vector3.UnitY * -1001, 1000, Color.White, -1, .9f),
-                new Sphere(new Vector3(-.5f, -.8f, 2.5f), .3f, Color.Brown, 1, 0),
-                new Sphere(new Vector3(0, -.8f, 3.5f), .3f, Color.Fuchsia, 50, .2f),
-                new Sphere(new Vector3(.5f, -.8f, 2.5f), .3f, Color.Orange, 100, .5f),
-                new Sphere(new Vector3(0, 0f, 2.8f), .3f, Color.White, -1, 1f),
-                new Sphere(new Vector3(-.5f, .8f, 2.5f), .3f, Color.Blue, 50, .5f),
-                new Sphere(new Vector3(0, .8f, 3.5f), .3f, Color.Indigo, 50, .2f),
-                new Sphere(new Vector3(.5f, .8f, 2.5f), .3f, Color.DarkGreen, 1, 0f),
+                new Sphere(Vector3.UnitY * -1001, 1000, mat),
+                new Sphere(new Vector3(-.8f, -.75f, 3.5f), .3f, Color.Red, 1, .1f),
+                new Sphere(new Vector3(0, -.7f, 4.5f), .3f, Color.Green, 50, .2f),
+                new Sphere(new Vector3(.8f, -.7f, 3.5f), .3f, Color.Blue, 100, .3f),
             });
 
             scene.LightSources.AddRange(new[]
             {
-                new LightSource(LightSourceType.Ambient, .3f),
-                new LightSource(LightSourceType.Point, .7f) {Position = new Vector3(-3, 1, 0)},
+                new LightSource(LightSourceType.Ambient, .2f),
+                new LightSource(LightSourceType.Point, .6f) {Position = new Vector3(2, 1, 0)},
+                new LightSource(LightSourceType.Directional, .2f) {Direction = new Vector3(1, 4, 0)},
             });
+
+            scene.CameraPosition = Vector3.UnitY * -.5f;
         }
 
         private void size_KeyPress(object sender, KeyPressEventArgs e)
@@ -154,18 +155,16 @@ namespace RayTracing
             if (e.KeyChar != 13)
                 return;
 
-            if (!float.TryParse(positionX.Text, out var posX))
+            if (!float.TryParse(positionX.Text, out var posX) ||
+                !float.TryParse(positionY.Text, out var posY) ||
+                !float.TryParse(positionZ.Text, out var posZ) ||
+                !float.TryParse(rotationX.Text, out var rotX) ||
+                !float.TryParse(rotationY.Text, out var rotY) ||
+                !float.TryParse(rotationZ.Text, out var rotZ))
+            {
+                MessageBox.Show("Неверный формат");
                 return;
-            if (!float.TryParse(positionY.Text, out var posY))
-                return;
-            if (!float.TryParse(positionZ.Text, out var posZ))
-                return;
-            if (!float.TryParse(rotationX.Text, out var rotX))
-                return;
-            if (!float.TryParse(rotationY.Text, out var rotY))
-                return;
-            if (!float.TryParse(rotationZ.Text, out var rotZ))
-                return;
+            }
 
             var scene = renderer.Scene;
             scene.CameraPosition = new Vector3(posX, posY, posZ);

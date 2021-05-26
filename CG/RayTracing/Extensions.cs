@@ -99,6 +99,16 @@ namespace RayTracing
             return vector.MultiplyMatrix(rotationMatrix);
         }
 
-        public static float[] ToArray(this Vector3 vector) => new[] {vector.X, vector.Y, vector.Z};
+        public static float GetAngle(this Vector3 vector1, Vector3 vector2)
+        {
+            var dotProduct = Vector3.Dot(vector1, vector2);
+            var len1 = vector1.Length();
+            var len2 = vector2.Length();
+            var cosA = dotProduct / (len1 * len2);
+            var angle = MathF.Acos(cosA);
+            var a = angle / MathF.PI * 180;
+            return angle;
+        }
+
     }
 }
